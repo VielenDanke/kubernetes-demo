@@ -9,6 +9,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: books
+  labels:
+    app: books
 spec:
   replicas: 3
   selector:
@@ -19,8 +21,8 @@ spec:
       labels:
         app: books # matched to selector -> matchLabels -> app in replicaset part
     spec:
-#      volumes:
-#        - name: books-secret
+      volumes:
+        - name: books-secret
 #          secret:
 #            secretName: books-secret
 #            items:
@@ -28,8 +30,10 @@ spec:
 #                path: username
 #              - key: password
 #                path: password
+#              - key: postgresConnectionUrl
+#                path: postgres
       containers:
-        - image: books:0.0.1
+        - image: books:1
           name: books
 #          volumeMounts:
 #            - mountPath: '/etc'
