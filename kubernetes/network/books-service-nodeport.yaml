@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: books-service-nodeport
+  labels:
+    service: books-nodeport
+spec:
+  type: NodePort
+  ports:
+    - port: 9090
+      targetPort: http
+      nodePort: 30007
+  selector:
+    app: books
