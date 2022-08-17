@@ -26,15 +26,14 @@ spec:
             httpGet:
               port: http
               path: /health
-            initialDelaySeconds: 3
-            periodSeconds: 3
-            failureThreshold: 1
           startupProbe:
             httpGet:
               port: http
               path: /health
-            failureThreshold: 30
-            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /health
 #          env:
 #            - name: APPLICATION_PORT
 #              value: '9090'

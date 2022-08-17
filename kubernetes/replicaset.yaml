@@ -15,11 +15,15 @@ spec:
       containers:
         - image: books:0.0.1
           name: books
-          livenessProbe:
+          livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http
               path: /health
-          startupProbe:
+          startupProbe: # check if container is available after startup (for long-start containers, java big apps for example)
+            httpGet:
+              port: http
+              path: /health
+          readinessProbe: # if fails - traffic will be stopped to this container, but container won't be restarted
             httpGet:
               port: http
               path: /health
