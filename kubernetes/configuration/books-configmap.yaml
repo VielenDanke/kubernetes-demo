@@ -6,3 +6,11 @@ metadata:
 data:
   applicationPort: "9090"
   applicationName: "books"
+#  app.properties: |
+#    applicationPort=9090
+#    applicationName=books
+#  config.json: |
+#    {
+#      "applicationPort": "9090",
+#      "applicationName": "books"
+#    }
