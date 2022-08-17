@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: books-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: books # we have to match replicaset with pod labels
+  template:
+    metadata:
+      labels:
+        app: books # matched to selector -> matchLabels -> app in replicaset part
+    spec:
+      containers:
+        - image: books:0.0.1
+          name: books
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /health
+          startupProbe:
+            httpGet:
+              port: http
+              path: /health
+#          env:
+#            - name: APPLICATION_PORT
+#              value: '9090'
+#            - name: APPLICATION_NAME
+#              value: 'books'
+          ports:
+            - name: http
+              containerPort: 9090
+#          resources:
+#            limits:
+#              cpu: 500m
+#              memory: 1Gi
+#            requests:
+#              cpu: 500m
+#              memory: 512Mi

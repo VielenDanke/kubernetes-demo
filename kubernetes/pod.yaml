@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: books
+  labels:
+    app: books
+spec:
+  containers:
+    - image: books:0.0.1
+      name: books
+      livenessProbe:
+        httpGet:
+          port: 9090
+          path: /health
+      readinessProbe:
+        httpGet:
+          port: 9090
+          path: /health
+#      env:
+#        - name: APPLICATION_PORT
+#          value: '9090'
+#        - name: APPLICATION_NAME
+#          value: 'books'
+      ports:
+        - containerPort: 9090
