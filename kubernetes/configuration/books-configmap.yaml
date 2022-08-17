@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: books-cm
-  namespace: default
+  name: books-configmap
+  namespace: default # if namespace exists - we don't need to point to concrete namespace in the console
 data:
-  applicationPort: "9090"
+  applicationPort: ":9090"
   applicationName: "books"
 #  app.properties: |
 #    applicationPort=9090
