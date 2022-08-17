@@ -13,24 +13,37 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: books
+      app: books # we have to match replicaset with pod labels
   template:
     metadata:
       labels:
-        app: books
+        app: books # matched to selector -> matchLabels -> app in replicaset part
     spec:
+#      volumes:
+#        - name: books-secret
+#          secret:
+#            secretName: books-secret
+#            items:
+#              - key: username
+#                path: username
+#              - key: password
+#                path: password
       containers:
         - image: books:0.0.1
           name: books
-          livenessProbe:
+#          volumeMounts:
+#            - mountPath: '/etc'
+#              name: books-secret
+#              readOnly: true
+          livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http
               path: /health
-          startupProbe:
+          startupProbe: # check if container is available after startup (for long-start containers, java big apps for example)
             httpGet:
               port: http
               path: /health
-          readinessProbe:
+          readinessProbe: # if fails - traffic will be stopped to this container, but container won't be restarted
             httpGet:
               port: http
               path: /health
