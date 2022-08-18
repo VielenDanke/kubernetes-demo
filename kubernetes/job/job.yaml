@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nginx-hello
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: nginx-hello
+          image: nginx:alpine
+          args:
+            - /bin/sh
+            - -c
+            - while true; do date; echo Hi; sleep 1; done
+  # maximum number of retries
+  backoffLimit: 2
+  # deadline to finish the job
+  activeDeadlineSeconds: 30
+  # after finished - delete in 10 seconds
+  ttlSecondsAfterFinished: 10

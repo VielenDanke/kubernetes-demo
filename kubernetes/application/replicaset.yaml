@@ -13,7 +13,7 @@ spec:
         app: books # matched to selector -> matchLabels -> app in replicaset part
     spec:
       containers:
-        - image: books:linux
+        - image: vielen1991/books:linux
           name: books
           livenessProbe: # if fails - container will be restarted
             httpGet:
