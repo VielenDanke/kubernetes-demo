@@ -6,7 +6,7 @@ metadata:
     app: books
 spec:
   containers:
-    - image: books:linux
+    - image: vielen1991/books:linux
       name: books
       livenessProbe:
         httpGet:
