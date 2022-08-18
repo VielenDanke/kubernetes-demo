@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nginx-hello-cron
+spec:
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 100
+      template:
+        spec:
+          containers:
+            - name: nginx-hello-cron
+              image: nginx:alpine
+              args:
+                - /bin/sh
+                - -c
+                - while true; do date; echo Hi; sleep 1; done
+  schedule: "*/1 * * * *"
+  # allow to start parallel jobs if first is not terminated for example
+  # by default is better to use Forbid. (Replace is a second option)
+  concurrencyPolicy: Forbid
+  # save only 5 successful jobs. The oldest will be removed
+  successfulJobsHistoryLimit: 5
+  # save history limit for last five failed jobs
+  failedJobsHistoryLimit: 5
+  # time to gap for job if the job cannot start exactly each minute in 00:00
+  # if it doesn't start - have a risk break CronJob controller (failed jobs > 100)
+  # 10 < n < 30 or number depends on scheduler itself
+  startingDeadlineSeconds: 10
