@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: books-ingress
+  name: service-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
