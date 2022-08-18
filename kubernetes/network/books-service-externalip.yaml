@@ -11,6 +11,6 @@ spec:
       port: 9090
       targetPort: http
   externalIPs:
-    - 1.2.4.114
+    - 192.168.49.2
   selector:
     app: books

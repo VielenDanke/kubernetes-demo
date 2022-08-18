@@ -33,7 +33,7 @@ spec:
 #              - key: postgresConnectionUrl
 #                path: postgres
       containers:
-        - image: vielen1991/books:1
+        - image: vielen1991/books:linux
           name: books
           volumeMounts:
             - mountPath: '/tmp'
