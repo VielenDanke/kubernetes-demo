@@ -17,7 +17,7 @@ spec:
                 name: books-service
                 port:
                   number: 9090
-          - path: /nginx-service(/|$)(.*)
+          - path: /nginx-service
             pathType: Prefix
             backend:
               service:
