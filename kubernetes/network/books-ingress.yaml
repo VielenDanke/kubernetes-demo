@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: books.local
+    - host: ingress.local
       http:
         paths:
           - path: /books-service(/|$)(.*)
