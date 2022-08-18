@@ -21,24 +21,20 @@ spec:
       labels:
         app: books # matched to selector -> matchLabels -> app in replicaset part
     spec:
-      volumes:
-        - name: books-secret
+#      volumes:
+#        - name: books-secret
 #          secret:
 #            secretName: books-secret
 #            items:
-#              - key: username
-#                path: username
-#              - key: password
-#                path: password
 #              - key: postgresConnectionUrl
 #                path: postgres
       containers:
-        - image: vielen1991/books:linux
+        - image: vielen1991/books:1 # change to v2 when secrets are active
           name: books
-          volumeMounts:
-            - mountPath: '/tmp'
-              name: books-secret
-              readOnly: true
+#          volumeMounts:
+#            - mountPath: '/tmp'
+#              name: books-secret
+#              readOnly: true
           livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http
@@ -51,11 +47,11 @@ spec:
             httpGet:
               port: http
               path: /health
-#          env:
-#            - name: APPLICATION_PORT
-#              value: '9090'
-#            - name: APPLICATION_NAME
-#              value: 'books'
+          env:
+            - name: APPLICATION_PORT
+              value: ':9090'
+            - name: APPLICATION_NAME
+              value: 'books'
           ports:
             - name: http
               containerPort: 9090

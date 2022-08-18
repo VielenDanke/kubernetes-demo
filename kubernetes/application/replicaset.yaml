@@ -13,7 +13,7 @@ spec:
         app: books # matched to selector -> matchLabels -> app in replicaset part
     spec:
       containers:
-        - image: vielen1991/books:linux
+        - image: vielen1991/books:1
           name: books
           livenessProbe: # if fails - container will be restarted
             httpGet:
@@ -27,11 +27,11 @@ spec:
             httpGet:
               port: http
               path: /health
-#          env:
-#            - name: APPLICATION_PORT
-#              value: '9090'
-#            - name: APPLICATION_NAME
-#              value: 'books'
+          env:
+            - name: APPLICATION_PORT
+              value: ':9090'
+            - name: APPLICATION_NAME
+              value: 'books'
           ports:
             - name: http
               containerPort: 9090

@@ -6,6 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Book struct {
@@ -28,6 +29,14 @@ func addTable(conn *sql.DB) error {
 
 func main() {
 	srv := http.NewServeMux()
+
+	/*
+		Deploy with secrets in deployment (image version 2)
+
+		postgresConnectionUrlBytes, _ := os.ReadFile("/tmp/postgres")
+
+		connection, connErr := initDBConnection(string(postgresConnectionUrlBytes))
+	*/
 
 	connection, connErr := initDBConnection("host=postgres port=5432 dbname=books user=user password=password sslmode=disable")
 
@@ -94,7 +103,9 @@ func main() {
 			rw.WriteHeader(http.StatusNotFound)
 		}
 	})
-	log.Printf("INFO: Server started on port: %s\n", "9090")
+	applicationPort, applicationName := os.Getenv("APPLICATION_PORT"), os.Getenv("APPLICATION_NAME")
 
-	log.Fatalln(http.ListenAndServe(":9090", srv))
+	log.Printf("INFO: Application %s started on port: %s\n", applicationName, applicationPort)
+
+	log.Fatalln(http.ListenAndServe(applicationPort, srv))
 }

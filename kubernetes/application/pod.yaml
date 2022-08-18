@@ -6,7 +6,7 @@ metadata:
     app: books
 spec:
   containers:
-    - image: vielen1991/books:linux
+    - image: vielen1991/books:1
       name: books
       livenessProbe:
         httpGet:
@@ -16,10 +16,10 @@ spec:
         httpGet:
           port: 9090
           path: /health
-#      env:
-#        - name: APPLICATION_PORT
-#          value: '9090'
-#        - name: APPLICATION_NAME
-#          value: 'books'
+      env:
+        - name: APPLICATION_PORT
+          value: ':9090'
+        - name: APPLICATION_NAME
+          value: 'books'
       ports:
         - containerPort: 9090
