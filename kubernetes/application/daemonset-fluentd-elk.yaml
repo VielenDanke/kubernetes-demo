@@ -1,3 +1,7 @@
+# running a cluster storage daemon on every node
+# running a logs collection daemon on every node
+# running a node monitoring daemon on every node
+# Examples: CoreDNS, FluentD etc.
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
