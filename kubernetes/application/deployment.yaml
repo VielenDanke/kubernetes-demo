@@ -9,17 +9,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: books
-  labels:
-    app: books
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: books # we have to match replicaset with pod labels
+      app: books # has to match .spec.template.metadata.labels
   template:
     metadata:
       labels:
-        app: books # matched to selector -> matchLabels -> app in replicaset part
+        app: books # has to match .spec.selector.matchLabels
     spec:
 #      volumes:
 #        - name: books-secret

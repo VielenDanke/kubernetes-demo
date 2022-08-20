@@ -16,4 +16,4 @@ spec:
 #      name: https
 #      targetPort: 9093
   selector:
-    app: books
+    app: books # has to match .spec.template.metadata.labels in deployment.yaml file
