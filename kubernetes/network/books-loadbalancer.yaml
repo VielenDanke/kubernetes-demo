@@ -1,3 +1,4 @@
+# https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
 apiVersion: v1
 kind: Service
 metadata:
