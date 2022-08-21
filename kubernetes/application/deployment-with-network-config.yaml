@@ -1,0 +1,57 @@
+# Let's say you use ReplicaSet-A for controlling your pods, then You wish to update your pods to a newer version,
+# now you should create Replicaset-B, scale down ReplicaSet-A and scale up ReplicaSet-B by one step repeatedly (This process is known as rolling update).
+# Although this does the job, but it's not a good practice and it's better to let K8S do the job.
+#
+# A Deployment resource does this automatically without any human interaction and increases the abstraction by one level.
+#
+# Note: Deployment doesn't interact with pods directly, it just does rolling update using ReplicaSets.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: books
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: books # has to match .spec.template.metadata.labels
+  template:
+    metadata:
+      labels:
+        app: books # has to match .spec.selector.matchLabels
+    spec:
+      # as result - books.service.svc.cluster.local
+      # name is present only in hosts file of the pod
+      # in Cluster DNS service it doesn't exist
+      hostname: books # change hostname
+      subdomain: service # change subdomain
+      # hostAliases will be added to /etc/hosts of the Pod
+      hostAliases: # transform hostnames to IP address (dns.google.local to 8.8.8.8)
+        - ip: 8.8.8.8
+          hostnames:
+            - dns.google.local
+            - dns8.google.local
+        - ip: 8.8.4.4
+          hostnames:
+            - dns4.google.local
+      dnsPolicy: None # for custom DNS config - None is necessary
+      dnsConfig: # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+        # servers <= 3 (More will be ignored)
+        nameservers:
+          - 8.8.8.8
+          - 8.8.4.4
+        searches:
+          - google.com
+        options:
+          - name: ndots # read about parameter here: https://habr.com/ru/company/nixys/blog/464371/
+            value: "2"
+      containers:
+        - image: vielen1991/books:1 # change to v2 when secrets are active
+          name: books
+          env:
+            - name: APPLICATION_PORT
+              value: ':9090'
+            - name: APPLICATION_NAME
+              value: 'books'
+          ports:
+            - name: http
+              containerPort: 9090
