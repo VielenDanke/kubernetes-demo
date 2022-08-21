@@ -1,10 +1,10 @@
 # Let's say you use ReplicaSet-A for controlling your pods, then You wish to update your pods to a newer version,
 # now you should create Replicaset-B, scale down ReplicaSet-A and scale up ReplicaSet-B by one step repeatedly (This process is known as rolling update).
-# Although this does the job, but it's not a good practice and it's better to let K8S do the job.
+# Although this does the job, but it's not a good practice it's better to let K8S do the job.
 #
 # A Deployment resource does this automatically without any human interaction and increases the abstraction by one level.
 #
-# Note: Deployment doesn't interact with pods directly, it just does rolling update using ReplicaSets.
+# Note: Deployment doesn't interact with pods directly, it is rolling update using ReplicaSets.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
