@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: books
+spec:
+  selector:
+    app: books
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: http
+  clusterIP: 192.168.49.2
+  type: LoadBalancer
