@@ -1,0 +1,107 @@
+---
+# Headless Service
+# Record type A in DNS system (No NAT), points directly to pod IP
+# usually using with StatefulSet entity (see /kubernetes/application/statefulset-nginx.yaml)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-svc-0
+  labels:
+    app: nexus-svc
+spec:
+  ports:
+    - port: 8081
+      name: http
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: nexus
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nexus
+spec:
+  serviceName: nexus
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+        - name: nexus
+          image: sonatype/nexus:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MAX_HEAP
+              value: "800m"
+            - name: MIN_HEAP
+              value: "300m"
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "1000m"
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+              name: http-main
+            - containerPort: 8083
+              protocol: TCP
+              name: http-docker
+          readinessProbe:
+            httpGet:
+              port: 8081
+              path: /
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 6
+          startupProbe:
+            httpGet:
+              port: 8081
+              path: /
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              port: 8081
+              path: /
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 6
+          volumeMounts:
+            - name: nexus-data
+              mountPath: /sonatype-work
+      volumes:
+        - name: nexus-data
+          emptyDir: { }
+---
+# Standard ClusterIP service, always ask nexus-0 pod (first pod) in stateful set
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-svc-1
+  labels:
+    app: nexus-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      name: http
+      protocol: TCP
+      targetPort: http
+    - port: 8083
+      name: http-docker
+      protocol: TCP
+      targetPort: http-docker
+  selector:
+    app: nexus
+    statefulset.kubernetes.io/pod-name: nexus-0 # ask concrete pod of stateful set

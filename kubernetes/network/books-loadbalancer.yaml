@@ -1,9 +1,11 @@
 # https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
+# NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
 apiVersion: v1
 kind: Service
 metadata:
   name: books
 spec:
+  allocateLoadBalancerNodePorts: false # disable allocation of NodePort
   selector:
     app: books
   ports:

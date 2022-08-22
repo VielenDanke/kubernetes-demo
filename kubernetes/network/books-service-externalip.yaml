@@ -1,3 +1,6 @@
+# Better not to use ExternalIP service type
+# Helps us to use service externally on some Network Interface
+# Could possibly cause Security issues
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,6 +8,8 @@ metadata:
   labels:
     service: books-service-externalip
 spec:
+  selector:
+    app: books
   ports:
     - name: http
       protocol: TCP
@@ -12,5 +17,3 @@ spec:
       targetPort: http
   externalIPs:
     - 192.168.49.2
-  selector:
-    app: books

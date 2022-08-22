@@ -11,6 +11,7 @@ metadata:
   name: books
 spec:
   replicas: 3
+  revisionHistoryLimit: 3 # how many old ReplicaSet for this Deployment you want to retain. Default - 10
   selector:
     matchLabels:
       app: books # has to match .spec.template.metadata.labels
@@ -62,6 +63,7 @@ spec:
           ports:
             - name: http
               containerPort: 9090
+              protocol: TCP
 #          resources:
 #            limits:
 #              cpu: 100m
