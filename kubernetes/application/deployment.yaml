@@ -26,6 +26,15 @@ spec:
 #            items:
 #              - key: postgresConnectionUrl
 #                path: postgres
+#      initContainers:
+#        - name: prepare
+#          image: busybox:1.35.0
+#          imagePullPolicy: IfNotPresent
+#          command:
+#            - sh
+#            - -c
+#            - |
+#              echo "I do any job before the main containers"
       containers:
         - image: vielen1991/books:1 # change to v2 when secrets are active
           name: books
