@@ -21,7 +21,7 @@ Short names:
 ### Work with context:
 All contexts are placed in file: ~/.kube/config
 * kubectl config get-contexts – find all available contexts
-* kubect config use-context <context_name> – use the context for kubectl
+* kubect config use-context <-context_name-> – use the context for kubectl
 
 ### To edit resource:
 
@@ -42,4 +42,13 @@ All contexts are placed in file: ~/.kube/config
 
 ### Pod:
 * kubectl exec -n <namespace> -it <pod_name> - - /bin/sh – working inside a container
-* kubectl logs -n <namespace> <pod_name> – get pod logs
+* kubectl logs -n <namespace> <pod_name> – get pod logs   
+
+## Minikube commands
+* minikube node add - add another node for minikube
+* minikube addons list - all addons for minikube
+* minikube addons enable <addon_name> -  enable any addon for minikube
+* minikube image build -t <tag> <directory> - build image directly to minikube 
+* minikube mount <from>:<to> - mount directory to minikube
+* minikube ip - show ip address of minikube
+* minikube —help - help description of minikube commands
