@@ -20,13 +20,13 @@ spec:
       labels:
         app: books # has to match .spec.selector.matchLabels
     spec:
-      volumes:
-        - name: books-secret
-          secret:
-            secretName: books-secret
-            items:
-              - key: postgresConnectionUrl
-                path: postgres
+#      volumes: # change it if secrets are present in namespace
+#        - name: books-secret
+#          secret:
+#            secretName: books-secret
+#            items:
+#              - key: postgresConnectionUrl
+#                path: postgres
 #      initContainers:
 #        - name: prepare
 #          image: busybox:1.35.0
@@ -39,7 +39,7 @@ spec:
       containers:
         - image: vielen1991/books:4 # change to v2 when secrets are active
           name: books
-#          volumeMounts:
+#          volumeMounts: # change it if secrets are present in namespace
 #            - mountPath: '/tmp'
 #              name: books-secret
 #              readOnly: true
@@ -56,16 +56,14 @@ spec:
               port: http
               path: /health
           env:
+            # change it to valueFro -> configMapKeyRef -> key: key in configmap, name: name of configmap
             - name: APPLICATION_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: applicationPort
-                  name: books-configmap
+              value: ":9090"
             - name: APPLICATION_NAME
-              valueFrom:
-                configMapKeyRef:
-                  key: applicationName
-                  name: books-configmap
+              value: "books"
+#          envFrom: # fetch all envs from existing configmap
+#            - configMapRef:
+#                name: books-configmap
           ports:
             - name: http
               containerPort: 9090
