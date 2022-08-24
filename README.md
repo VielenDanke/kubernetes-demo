@@ -45,7 +45,8 @@ To install image directly to minikube:
 * kubernetes/configuration - configuration abstractions   
 * kubernetes/network - network abstractions   
 * kubernetes/preparation - abstractions for presentation   
-* kubernetes/job - abstractions for job   
+* kubernetes/job - abstractions for job 
+* kubernetes/examples - ready to deploy applications based on Nginx image
 
 ---
 
