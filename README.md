@@ -13,10 +13,10 @@ To access docker registry:
 * Now your image tag will look like $your_login/$image_name:$tag   
 
 To create your own registry:
-* Look: https://docs.docker.com/registry/deploying/
+* See https://docs.docker.com/registry/deploying/
 
 To use minikube registry:
-* Look https://minikube.sigs.k8s.io/docs/handbook/registry/
+* See https://minikube.sigs.k8s.io/docs/handbook/registry/
 
 To install image directly to minikube:
 * minikube image build -t $image:$tag -f $dockerfile_path $dockerfile_directory
