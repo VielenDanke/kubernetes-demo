@@ -2,8 +2,25 @@
 
 ## Preparation
 
-If you want to test application inside repository - do not forget to span all preparation containers:   
-kubectl apply -f kubernetes/preparation   
+If you want to test application inside repository - do not forget to:   
+* Span all preparation containers - kubectl apply -f kubernetes/preparation
+* Build application - docker build -t $registry/$image_name:$tag $directory
+* Push application - docker push -t (tag from previous step)
+* Change image section in deployment.yaml file to new $registry/$image_name:$tag
+
+To access docker registry:
+* Register on https://hub.docker.com/
+* Now your image tag will look lit $your_login/$image_name:$tag   
+
+To create your own registry:
+* Look: https://docs.docker.com/registry/deploying/
+
+To use minikube registry:
+* Look https://minikube.sigs.k8s.io/docs/handbook/registry/
+
+To install image directly to minikube:
+* minikube image build -t $image:$tag -f $dockerfile_path $dockerfile_directory
+  * minikube image build -t books:minikube -f Dockerfile . (Example)
 
 ---
 
