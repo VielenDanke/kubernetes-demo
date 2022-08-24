@@ -1,0 +1,25 @@
+# Service - NAT (Network address translation https://en.wikipedia.org/wiki/Network_address_translation)
+# NAT mechanism - IPTables, IPVS (Preferable)
+# Rule: If request comes to ClusterIP on port 9090 -> redirect it to IP address of pod
+# Default balancing algorithm - RoundRobin
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  # namespace: applications
+  labels:
+    service: nginx-service
+spec:
+  selector:
+    # using selector - entity Endpoint will be created automatically along with service
+    app: nginx # has to match .spec.template.metadata.labels in deployment.yaml file
+  type: ClusterIP # default service type
+  ports:
+    - port: 80
+      name: http
+      targetPort: http # name of port in deployment.yaml
+      protocol: TCP
+    - port: 443
+      protocol: TCP
+      name: https
+      targetPort: https

@@ -1,0 +1,18 @@
+# Open on all nodes of cluster particular port for listening
+# default port range 30000-32767
+# config during cluster setup
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport
+  labels:
+    service: nginx-nodeport
+spec:
+  # externalTrafficPolicy: Local # NAT working only in particular node where Pod and Service is located
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: http
+      nodePort: 30007

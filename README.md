@@ -1,5 +1,28 @@
 # Kubernetes main abstractions
 
+## Preparation
+
+If you want to test application inside repository - do not forget to span all preparation containers:   
+kubectl apply -f kubernetes/preparation   
+
+---
+
+## Application
+
+### Application with cluster IP and ingress
+* kubectl apply -f kubernetes/examples/application-cluster-ip   
+  * **Do not forget to turn Ingress addon on if you are using minikube (minikube addons enable ingress)**   
+* Add IP of your cluster to /etc/hosts file (Windows C:\Windows\System32\drivers\etc\hosts):   
+  * 192.168.49.2 ingress.local
+* Check if it is working: curl -v ingress.local   
+
+### Application with nodePort
+* kubectl apply -f kubernetes/examples/application-nodeport   
+* Check if it is working: curl $(minikube ip):30007 | curl localhost:30007
+  * Be aware, on OS (Windows, Mac with Minikube) abstraction won't be reachable. Don't be afraid, it is working.   
+  * Access NodePort on minikube (https://minikube.sigs.k8s.io/docs/handbook/accessing/)
+---
+
 ## Folder structure
 * kubernetes/application - application abstractions   
 * kubernetes/configuration - configuration abstractions   
@@ -7,8 +30,12 @@
 * kubernetes/preparation - abstractions for presentation   
 * kubernetes/job - abstractions for job   
 
+---
+
 ## Kubernetes network
 * https://www.youtube.com/c/%D0%90%D1%80%D1%82%D1%83%D1%80%D0%9A%D1%80%D1%8E%D0%BA%D0%BE%D0%B2
+
+---
 
 ## Kubernetes commands
 ### Main commands:
@@ -43,6 +70,8 @@ All contexts are placed in file: ~/.kube/config
 ### Pod:
 * kubectl exec -n <namespace> -it <pod_name> - - /bin/sh – working inside a container
 * kubectl logs -n <namespace> <pod_name> – get pod logs   
+
+---
 
 ## Minikube commands
 * minikube node add - add another node for minikube

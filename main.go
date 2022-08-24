@@ -30,13 +30,10 @@ func addTable(conn *sql.DB) error {
 func main() {
 	srv := http.NewServeMux()
 
-	/*
-		Deploy with secrets in deployment (image version 2)
-
-		postgresConnectionUrlBytes, _ := os.ReadFile("/tmp/postgres")
-
-		connection, connErr := initDBConnection(string(postgresConnectionUrlBytes))
-	*/
+	// change if you are using secrets in deployment.yaml
+	//postgresConnectionUrlBytes, _ := os.ReadFile("/tmp/postgres")
+	//
+	//connection, connErr := initDBConnection(string(postgresConnectionUrlBytes))
 
 	connection, connErr := initDBConnection("host=postgres port=5432 dbname=books user=user password=password sslmode=disable")
 

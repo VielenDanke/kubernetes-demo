@@ -8,67 +8,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: books
+  name: nginx
 spec:
   replicas: 3
-  revisionHistoryLimit: 3 # how many old ReplicaSet for this Deployment you want to retain. Default - 10
   selector:
     matchLabels:
-      app: books # has to match .spec.template.metadata.labels
+      app: nginx # has to match .spec.template.metadata.labels
   template:
     metadata:
       labels:
-        app: books # has to match .spec.selector.matchLabels
+        app: nginx # has to match .spec.selector.matchLabels
     spec:
-      volumes:
-        - name: books-secret
-          secret:
-            secretName: books-secret
-            items:
-              - key: postgresConnectionUrl
-                path: postgres
-#      initContainers:
-#        - name: prepare
-#          image: busybox:1.35.0
-#          imagePullPolicy: IfNotPresent
-#          command:
-#            - sh
-#            - -c
-#            - |
-#              echo "I do any job before the main containers"
       containers:
-        - image: vielen1991/books:4 # change to v2 when secrets are active
-          name: books
-#          volumeMounts:
-#            - mountPath: '/tmp'
-#              name: books-secret
-#              readOnly: true
+        - image: nginx:latest
+          name: nginx
           livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http
-              path: /health
+              path: /
           startupProbe: # check if container is available after startup (for long-start containers, java big apps for example)
             httpGet:
               port: http
-              path: /health
+              path: /
           readinessProbe: # if fails - traffic will be stopped to this container, but container won't be restarted
             httpGet:
               port: http
-              path: /health
-          env:
-            - name: APPLICATION_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: applicationPort
-                  name: books-configmap
-            - name: APPLICATION_NAME
-              valueFrom:
-                configMapKeyRef:
-                  key: applicationName
-                  name: books-configmap
+              path: /
           ports:
             - name: http
-              containerPort: 9090
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
               protocol: TCP
           resources:
             limits:
