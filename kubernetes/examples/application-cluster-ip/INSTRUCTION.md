@@ -17,15 +17,18 @@ spec:
   rules:
     - host: ingress.local
 ```
-You host file should look like:
+We have to put `host` part to /etc/hosts file. To do that:
+`sudo vim /etc/hosts`   
+Your host file should look like:
 ```
 127.0.0.1      localhost
-127.0.0.1      ingress.local
+127.0.0.1      ingress.local # add to host file
 ```
 In case you are using minikube:
 ```
-$minikube_ip   ingress.local
+$minikube_ip   ingress.local # add to host file
 ```
+To check minikube ip - tap in terminal `minikube ip`
 
 ## Test your application
 * Open terminal -> `curl -v ingress.local`   
