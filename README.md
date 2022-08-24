@@ -10,7 +10,7 @@ If you want to test application inside repository - do not forget to:
 
 To access docker registry:
 * Register on https://hub.docker.com/
-* Now your image tag will look lit $your_login/$image_name:$tag   
+* Now your image tag will look like $your_login/$image_name:$tag   
 
 To create your own registry:
 * Look: https://docs.docker.com/registry/deploying/
