@@ -2,11 +2,23 @@
 
 ## Preparation
 
+### Ingress
+* Docker desktop - https://kubernetes.github.io/ingress-nginx/deploy/#docker-for-mac
+  * Using kubectl - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml`
+  * Using helm - `helm upgrade --install ingress-nginx ingress-nginx \
+    --repo https://kubernetes.github.io/ingress-nginx \
+    --namespace ingress-nginx --create-namespace`
+* Minikube - `minikube addons enable ingress`
+
+### Repository application
+
 If you want to test application inside repository - do not forget to:   
 * Span all preparation containers - kubectl apply -f kubernetes/preparation
 * Build application - docker build -t $registry/$image_name:$tag $directory
 * Push application - docker push -t (tag from previous step)
 * Change image section in deployment.yaml file to new $registry/$image_name:$tag
+
+### Docker registry
 
 To access docker registry:
 * Register on https://hub.docker.com/
@@ -27,10 +39,10 @@ To install image directly to minikube:
 ## Application
 
 ### Application with cluster IP and ingress
+Step-by-step instruction - [Application with Cluster IP service and Ingress](kubernetes/examples/application-cluster-ip/INSTRUCTION.md)
 * kubectl apply -f kubernetes/examples/application-cluster-ip   
-  * **Do not forget to turn Ingress addon on if you are using minikube (minikube addons enable ingress)**   
-* Add IP of your cluster to /etc/hosts file (Windows C:\Windows\System32\drivers\etc\hosts):   
-  * 192.168.49.2 ingress.local
+  * **Do not forget to turn Ingress addon on if you are using minikube**   
+* Add IP of your cluster to /etc/hosts file (Windows C:\Windows\System32\drivers\etc\hosts):
 * Check if it is working: curl -v ingress.local   
 
 ### Application with nodePort
@@ -66,36 +78,36 @@ Short names:
 ### Work with context:
 All contexts are placed in file: ~/.kube/config
 * kubectl config get-contexts – find all available contexts
-* kubect config use-context <-context_name-> – use the context for kubectl
+* kubect config use-context $-context_name- – use the context for kubectl
 
 ### To edit resource:
 
-* kubectl edit <resource> -n <namespace> <resource_name>
+* kubectl edit $resource -n $namespace $resource_name
   * Example: kubectl edit secrets -n trends plutus-tls
 
 ### To describe resource:
-* kubectl describe <resource> -n <namespace> <resource_name>
+* kubectl describe $resource -n $namespace $resource_name
   * Example: kubectl describe pod -n trends plutus-integ-asdasd-123we
 
 ### To download resource:
-* kubectl get <resource> -n <namespace> <resource_name> -o <format> > some.<format> – download resource as file with specific format (json, yaml). 
-  * Example: kubectl get cm -n trends coolmap -o yaml > some.yaml
+* kubectl get $resource -n $namespace $resource_name -o $format  some.$format – download resource as file with specific format (json, yaml). 
+  * Example: kubectl get cm -n trends coolmap -o yaml  some.yaml
 
 ### To get resource:
-* kubectl get <resource> -n <namespace> – all resources in the namespace
-* kubectl get <resource> --all-namespaces – all resource in all namespaces
+* kubectl get $resource -n $namespace – all resources in the namespace
+* kubectl get $resource --all-namespaces – all resource in all namespaces
 
 ### Pod:
-* kubectl exec -n <namespace> -it <pod_name> - - /bin/sh – working inside a container
-* kubectl logs -n <namespace> <pod_name> – get pod logs   
+* kubectl exec -n $namespace -it $pod_name - - /bin/sh – working inside a container
+* kubectl logs -n $namespace $pod_name – get pod logs   
 
 ---
 
 ## Minikube commands
 * minikube node add - add another node for minikube
 * minikube addons list - all addons for minikube
-* minikube addons enable <addon_name> -  enable any addon for minikube
-* minikube image build -t <tag> <directory> - build image directly to minikube 
-* minikube mount <from>:<to> - mount directory to minikube
+* minikube addons enable $addon_name -  enable any addon for minikube
+* minikube image build -t $tag $directory - build image directly to minikube 
+* minikube mount $from:$to - mount directory to minikube
 * minikube ip - show ip address of minikube
 * minikube —help - help description of minikube commands
