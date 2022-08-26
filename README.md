@@ -47,6 +47,7 @@ Step-by-step instruction - [Application with Cluster IP service and Ingress](kub
 * Check if it is working: curl -v ingress.local   
 
 ### Application with nodePort
+Step-by-step instruction - [Application with NodePort service](kubernetes/examples/application-nodeport/INSTRUCTION.md)
 * kubectl apply -f kubernetes/examples/application-nodeport   
 * Check if it is working: curl $(minikube ip):30007 | curl localhost:30007
   * Be aware, on OS (Windows, Mac with Minikube) abstraction won't be reachable. Don't be afraid, it is working.   
