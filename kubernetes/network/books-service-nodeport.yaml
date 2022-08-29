@@ -8,7 +8,7 @@ metadata:
   labels:
     service: books-nodeport
 spec:
-  # externalTrafficPolicy: Local # NAT working only in particular node where Pod and Service is located
+  # externalTrafficPolicy: Local # NAT working only in particular node where Pod is located
   selector:
     app: books
   type: NodePort
