@@ -18,7 +18,7 @@ spec:
           path: /health
       env:
         - name: APPLICATION_PORT
-          value: ':9090'
+          value: '9090'
         - name: APPLICATION_NAME
           value: 'books'
       ports:

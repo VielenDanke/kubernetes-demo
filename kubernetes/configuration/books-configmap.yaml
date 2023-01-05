@@ -4,13 +4,5 @@ metadata:
   name: books-configmap
   namespace: default # if namespace exists - we don't need to point to concrete namespace in the console
 data:
-  applicationPort: ":9090"
-  applicationName: "books"
-#  app.properties: |
-#    applicationPort=9090
-#    applicationName=books
-#  config.json: |
-#    {
-#      "applicationPort": "9090",
-#      "applicationName": "books"
-#    }
+  APPLICATION_PORT: "9090"
+  APPLICATION_NAME: "books"

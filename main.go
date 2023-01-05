@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -62,6 +63,10 @@ func generateNextID() int {
 }
 
 func main() {
+	log.Printf("Application %s is starting\n", os.Getenv("APPLICATION_NAME"))
+
+	log.Printf("DB credentials: username: %s, password: %s\n", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"))
+
 	router := gin.Default()
 
 	router.GET("/books", findAll)
@@ -70,5 +75,5 @@ func main() {
 
 	router.POST("/books", save)
 
-	log.Fatalln(router.Run("localhost:8080"))
+	log.Fatalln(router.Run("localhost:%s", os.Getenv("APPLICATION_PORT")))
 }
