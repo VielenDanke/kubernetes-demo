@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -14,6 +15,11 @@ var books = []book{
 	{ID: 1, Name: "first"},
 	{ID: 2, Name: "second"},
 	{ID: 3, Name: "third"},
+}
+
+type config struct {
+	Port string `json:"application_port"`
+	Name string `json:"application_name"`
 }
 
 type book struct {
@@ -62,8 +68,38 @@ func generateNextID() int {
 	return maxID + 1
 }
 
+func parseConfig() (cfg config, err error) {
+	file, err := os.Open("/tmp/config.json")
+
+	if err != nil {
+		log.Println("File is not found, parse env")
+
+		cfg.Port = os.Getenv("APPLICATION_PORT")
+		cfg.Name = os.Getenv("APPLICATION_NAME")
+	} else {
+		if err = json.NewDecoder(file).Decode(&cfg); err != nil {
+			return
+		}
+	}
+	err = validateConfig(cfg)
+	return
+}
+
+func validateConfig(cfg config) (err error) {
+	if len(cfg.Port) == 0 || len(cfg.Name) == 0 {
+		err = fmt.Errorf("config is not found")
+	}
+	return
+}
+
 func main() {
-	log.Printf("Application %s is starting\n", os.Getenv("APPLICATION_NAME"))
+	cfg, err := parseConfig()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Printf("Application %s is starting\n", cfg.Name)
 
 	log.Printf("DB credentials: username: %s, password: %s\n", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"))
 
@@ -75,5 +111,5 @@ func main() {
 
 	router.POST("/books", save)
 
-	log.Fatalln(router.Run("localhost:%s", os.Getenv("APPLICATION_PORT")))
+	log.Fatalln(router.Run("localhost:%s", cfg.Port))
 }
