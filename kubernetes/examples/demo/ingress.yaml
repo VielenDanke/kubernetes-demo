@@ -6,6 +6,13 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
+  # about tls in Ingress - https://kubernetes.github.io/ingress-nginx/user-guide/tls/
+  # to generate certificate - HOST=<needed host> KEY_FILE=<any name>.key CERT_FILE=<any name>.crt openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ${KEY_FILE} -out ${CERT_FILE} -subj "/CN=${HOST}/O=${HOST}" -addext "subjectAltName = DNS:${HOST}"
+  # to create secret - kubectl create secret tls books-local-secret-tls --key server.key --cert server.crt
+  tls:
+    - hosts:
+        - books.local
+      secretName: books-local-secret-tls
   rules:
     - host: books.local
       http:
