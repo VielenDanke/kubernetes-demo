@@ -9,9 +9,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: books
+  # namespace
+  annotations:
+    createdBy: foo
 spec:
   replicas: 3
-  revisionHistoryLimit: 3 # how many old ReplicaSet for this Deployment you want to retain. Default - 10
   selector:
     matchLabels:
       app: books # has to match .spec.template.metadata.labels
@@ -20,29 +22,9 @@ spec:
       labels:
         app: books # has to match .spec.selector.matchLabels
     spec:
-#      volumes: # change it if secrets are present in namespace
-#        - name: books-secret
-#          secret:
-#            secretName: books-secret
-#            items:
-#              - key: postgresConnectionUrl
-#                path: postgres
-#      initContainers:
-#        - name: prepare
-#          image: busybox:1.35.0
-#          imagePullPolicy: IfNotPresent
-#          command:
-#            - sh
-#            - -c
-#            - |
-#              echo "I do any job before the main containers"
       containers:
-        - image: vielen1991/books:4 # change to v2 when secrets are active
+        - image: vielen1991/books:1
           name: books
-#          volumeMounts: # change it if secrets are present in namespace
-#            - mountPath: '/tmp'
-#              name: books-secret
-#              readOnly: true
           livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http
@@ -55,23 +37,17 @@ spec:
             httpGet:
               port: http
               path: /health
-          env:
-            # change it to valueFro -> configMapKeyRef -> key: key in configmap, name: name of configmap
-            - name: APPLICATION_PORT
-              value: ":9090"
-            - name: APPLICATION_NAME
-              value: "books"
-#          envFrom: # fetch all envs from existing configmap
-#            - configMapRef:
-#                name: books-configmap
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+            - name: https
+              containerPort: 8443
+              protocol: TCP
           resources:
             limits:
               cpu: 100m
-              memory: 512Mi
+              memory: 256Mi
             requests:
               cpu: 100m
-              memory: 256Mi
+              memory: 128Mi

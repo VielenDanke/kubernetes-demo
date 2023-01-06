@@ -16,6 +16,4 @@ WORKDIR /
 
 COPY --from=build /books /books
 
-EXPOSE 9090
-
 ENTRYPOINT ["./books"]

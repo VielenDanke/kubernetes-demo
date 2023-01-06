@@ -1,0 +1,27 @@
+# Service - NAT (Network address translation https://en.wikipedia.org/wiki/Network_address_translation)
+# NAT mechanism - IPTables, IPVS (Preferable)
+# Rule: If request comes to ClusterIP on port 9090 -> redirect it to IP address of pod
+# Default balancing algorithm - RoundRobin
+apiVersion: v1
+kind: Service
+metadata:
+  name: books
+  # namespace: applications
+  labels:
+    service: books
+  annotations:
+    createdBy: foo
+spec:
+  selector:
+    # using selector - entity Endpoint will be created automatically along with service
+    app: books # has to match .spec.template.metadata.labels in deployment.yaml file
+  type: ClusterIP # default service type
+  ports:
+    - port: 8080
+      name: http
+      targetPort: http # name of port in deployment.yaml
+      protocol: TCP
+    - port: 8443
+      protocol: TCP
+      name: https
+      targetPort: 8443

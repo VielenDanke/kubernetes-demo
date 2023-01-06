@@ -68,7 +68,9 @@ func generateNextID() int {
 	return maxID + 1
 }
 
-func parseConfig() (cfg config, err error) {
+func parseFileEnvConfig() (config, error) {
+	var cfg config
+
 	file, err := os.Open("/tmp/config.json")
 
 	if err != nil {
@@ -76,28 +78,36 @@ func parseConfig() (cfg config, err error) {
 
 		cfg.Port = os.Getenv("APPLICATION_PORT")
 		cfg.Name = os.Getenv("APPLICATION_NAME")
+
+		return cfg, nil
 	} else {
+		log.Println("File is found - parse file")
+
 		if err = json.NewDecoder(file).Decode(&cfg); err != nil {
-			return
+			return cfg, err
 		}
 	}
-	err = validateConfig(cfg)
-	return
+	return cfg, nil
 }
 
-func validateConfig(cfg config) (err error) {
-	if len(cfg.Port) == 0 || len(cfg.Name) == 0 {
-		err = fmt.Errorf("config is not found")
+func setupDefaultConfigIfNeeded(cfg *config) {
+	log.Println("File and Env config are not found. Setup default")
+	if len(cfg.Port) == 0 {
+		cfg.Port = "8080"
+	}
+	if len(cfg.Name) == 0 {
+		cfg.Name = "books"
 	}
 	return
 }
 
 func main() {
-	cfg, err := parseConfig()
+	cfg, err := parseFileEnvConfig()
 
 	if err != nil {
 		log.Fatalln(err)
 	}
+	setupDefaultConfigIfNeeded(&cfg)
 
 	log.Printf("Application %s is starting\n", cfg.Name)
 
@@ -111,5 +121,9 @@ func main() {
 
 	router.POST("/books", save)
 
-	log.Fatalln(router.Run("localhost:%s", cfg.Port))
+	router.GET("/health", func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	})
+
+	log.Fatalln(router.Run(fmt.Sprintf(":%s", cfg.Port)))
 }
