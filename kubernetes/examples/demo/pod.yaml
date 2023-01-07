@@ -16,10 +16,5 @@ spec:
         httpGet:
           port: 8080
           path: /health
-      env:
-        - name: APPLICATION_PORT
-          value: '8080'
-        - name: APPLICATION_NAME
-          value: 'books'
       ports:
         - containerPort: 8080

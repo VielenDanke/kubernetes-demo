@@ -76,8 +76,14 @@ func parseFileEnvConfig() (config, error) {
 	if err != nil {
 		log.Println("File is not found, parse env")
 
-		cfg.Port = os.Getenv("APPLICATION_PORT")
-		cfg.Name = os.Getenv("APPLICATION_NAME")
+		appPort := os.Getenv("APPLICATION_PORT")
+		appName := os.Getenv("APPLICATION_NAME")
+
+		if len(appPort) == 0 || len(appName) == 0 {
+			return cfg, fmt.Errorf("env config are not exists")
+		}
+		cfg.Port = appPort
+		cfg.Name = appName
 
 		return cfg, nil
 	} else {
@@ -90,7 +96,7 @@ func parseFileEnvConfig() (config, error) {
 	return cfg, nil
 }
 
-func setupDefaultConfigIfNeeded(cfg *config) {
+func setupDefaultConfig(cfg *config) {
 	log.Println("File and Env config are not found. Setup default")
 	if len(cfg.Port) == 0 {
 		cfg.Port = "8080"
@@ -105,9 +111,9 @@ func main() {
 	cfg, err := parseFileEnvConfig()
 
 	if err != nil {
-		log.Fatalln(err)
+		log.Printf("Config are not set up. The reason: %v. Using default instead.", err)
+		setupDefaultConfig(&cfg)
 	}
-	setupDefaultConfigIfNeeded(&cfg)
 
 	log.Printf("Application %s is starting\n", cfg.Name)
 
