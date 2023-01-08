@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+  namespace: default # if namespace exists - we don't need to point to concrete namespace in the console
+data:
+  APPLICATION_PORT: "8080"
+  APPLICATION_NAME: "books"

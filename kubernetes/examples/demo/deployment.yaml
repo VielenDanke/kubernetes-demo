@@ -22,9 +22,33 @@ spec:
       labels:
         app: books # has to match .spec.selector.matchLabels
     spec:
+#      volumes:
+#        - name: configmap-file
+#          configMap:
+#            name: configmap-file
       containers:
         - image: vielen1991/books:1
+#          volumeMounts:
+#            - mountPath: /tmp
+#              name: configmap-file
           name: books
+          env:
+            - name: APPLICATION_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: APPLICATION_PORT
+                  name: configmap
+            - name: APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: APPLICATION_NAME
+                  name: configmap
+#          envFrom:
+#            - secretRef:
+#                name: secret
+#          envFrom:
+#            - configMapRef:
+#                name: configmap
           livenessProbe: # if fails - container will be restarted
             httpGet:
               port: http

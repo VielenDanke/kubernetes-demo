@@ -9,6 +9,7 @@ metadata:
   # namespace: applications
   labels:
     service: books
+  # specify any metadata you want to attach to service - https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   annotations:
     createdBy: foo
 spec:

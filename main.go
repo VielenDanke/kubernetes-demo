@@ -97,7 +97,6 @@ func parseFileEnvConfig() (config, error) {
 }
 
 func setupDefaultConfig(cfg *config) {
-	log.Println("File and Env config are not found. Setup default")
 	if len(cfg.Port) == 0 {
 		cfg.Port = "8080"
 	}
@@ -117,8 +116,14 @@ func main() {
 
 	log.Printf("Application %s is starting\n", cfg.Name)
 
-	log.Printf("DB credentials: username: %s, password: %s\n", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"))
+	username := os.Getenv("DB_USERNAME")
+	password := os.Getenv("DB_PASSWORD")
 
+	if len(username) == 0 || len(password) == 0 {
+		log.Println("Credentials are not exists")
+	} else {
+		log.Printf("DB credentials: username: %s, password: %s", username, password)
+	}
 	router := gin.Default()
 
 	router.GET("/books", findAll)
