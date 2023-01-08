@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: books-replicaset
+  name: books
 spec:
   replicas: 3
   selector:
