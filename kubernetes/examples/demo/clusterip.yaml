@@ -1,7 +1,8 @@
 # Service - NAT (Network address translation https://en.wikipedia.org/wiki/Network_address_translation)
-# NAT mechanism - IPTables, IPVS (Preferable)
-# Rule: If request comes to ClusterIP on port 9090 -> redirect it to IP address of pod
+# NAT mechanism - IPTables (Lookup O(N) time), IPVS (Preferable, Lookup O(1) time), depends on cluster set up configuration
+# Rule: If request comes to ClusterIP on port 8080 -> redirect it to IP address of pod
 # Default balancing algorithm - RoundRobin
+# By default - creating Service and Endpoint (what end destination we want to achieve) abstraction
 apiVersion: v1
 kind: Service
 metadata:

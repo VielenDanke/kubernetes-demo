@@ -1,3 +1,5 @@
+# endpoint name with service name should match
+# Service without selectors doesn't create Endpoint abstraction
 ---
 apiVersion: v1
 kind: Service
