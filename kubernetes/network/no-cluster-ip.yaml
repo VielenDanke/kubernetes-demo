@@ -1,6 +1,6 @@
 ---
 # Headless Service
-# Record type A in DNS system (No NAT), points directly to pod IP
+# Record type A in DNS system (No NAT), points directly to pod IP (No service IP)
 # usually using with StatefulSet entity (see /kubernetes/application/statefulset-nginx.yaml)
 apiVersion: v1
 kind: Service
