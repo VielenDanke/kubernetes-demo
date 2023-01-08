@@ -75,3 +75,34 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
+#      -- turn off schedule logic on nodes with key dedicated equal permanent
+#      tolerations:
+#        - key: dedicated
+#          operator: Equal
+#          value: permanent
+#          effect: NoSchedule
+#      -- schedule pods on nodes with disktype: ssd label
+#      nodeSelector:
+#        disktype: ssd
+#      affinity:
+#      -- required to schedule all pods on concrete node pool
+#        nodeAffinity:
+#          requiredDuringSchedulingIgnoredDuringExecution:
+#            nodeSelectorTerms:
+#              - matchExpressions:
+#                  - key: domain.local/nodepool-type
+#                    operator: In
+#                    values:
+#                      - static
+#      -- avoids put multiple replicas with label app.kubernetes.io/name=books on a single node with topologyKey
+#        podAntiAffinity:
+#          preferredDuringSchedulingIgnoredDuringExecution:
+#            - weight: 80
+#              podAffinityTerm:
+#                labelSelector:
+#                  matchExpressions:
+#                    - key: app.kubernetes.io/name
+#                      operator: In
+#                      values:
+#                        - books
+#                topologyKey: kubernetes.io/hostname
