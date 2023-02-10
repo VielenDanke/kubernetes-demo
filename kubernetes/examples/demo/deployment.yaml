@@ -13,6 +13,8 @@ metadata:
   annotations:
     createdBy: foo
 spec:
+  # versions to rollback (by default - 10)
+  revisionHistoryLimit: 3
   replicas: 3
   selector:
     matchLabels:
@@ -22,15 +24,20 @@ spec:
       labels:
         app: books # has to match .spec.selector.matchLabels
     spec:
+    # all type of volues: https://kubernetes.io/docs/concepts/storage/volumes/
 #      volumes:
 #        - name: configmap-file
 #          configMap:
 #            name: configmap-file
+#        - name: empty
+#          emptyDir: {}
       containers:
         - image: vielen1991/books:1
 #          volumeMounts:
 #            - mountPath: /tmp
 #              name: configmap-file
+#            - mountPath: /empty
+#              name: empty
           name: books
           env:
             - name: APPLICATION_PORT
