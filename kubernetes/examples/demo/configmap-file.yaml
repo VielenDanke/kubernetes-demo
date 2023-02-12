@@ -1,3 +1,4 @@
+# create configmap from console: kubectl create configmap <configmap-name> --from-file=./<filename>.<ext>
 apiVersion: v1
 kind: ConfigMap
 metadata:

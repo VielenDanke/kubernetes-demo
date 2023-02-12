@@ -31,13 +31,20 @@ spec:
 #            name: configmap-file
 #        - name: empty
 #          emptyDir: {}
+#        - name: secret
+#          secret:
+#            secretName: secret
       containers:
         - image: vielen1991/books:1
+          # if we are replacing file, ex: /empty/config.json we will need to specify subPath: config.json
 #          volumeMounts:
-#            - mountPath: /tmp
+          # if we are mounting as directory all changes will be applied automatically, same for Secret
+#            - mountPath: /tmp/
 #              name: configmap-file
-#            - mountPath: /empty
+#            - mountPath: /empty/
 #              name: empty
+#            - mountPath: /secret/
+#              name: secret
           name: books
           env:
             - name: APPLICATION_PORT
