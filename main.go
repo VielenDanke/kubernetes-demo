@@ -47,6 +47,23 @@ func findById(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": fmt.Sprintf("Book with ID %d not found", id)})
 }
 
+func deleteById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	for idx, book := range books {
+		if book.ID == id {
+			books = append(books[:idx], books[(idx+1):]...)
+			c.Status(http.StatusOK)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": fmt.Sprintf("Book with ID %d not found", id)})
+}
+
 func save(c *gin.Context) {
 	var newBook book
 
@@ -74,25 +91,31 @@ func parseFileEnvConfig() (config, error) {
 	file, err := os.Open("/tmp/config.json")
 
 	if err != nil {
-		log.Println("File is not found, parse env")
-
-		appPort := os.Getenv("APPLICATION_PORT")
-		appName := os.Getenv("APPLICATION_NAME")
-
-		if len(appPort) == 0 || len(appName) == 0 {
-			return cfg, fmt.Errorf("env config are not exists")
-		}
-		cfg.Port = appPort
-		cfg.Name = appName
-
-		return cfg, nil
-	} else {
-		log.Println("File is found - parse file")
-
-		if err = json.NewDecoder(file).Decode(&cfg); err != nil {
-			return cfg, err
-		}
+		return cfg, err
 	}
+	log.Println("File is found - parse file")
+
+	if err = json.NewDecoder(file).Decode(&cfg); err != nil {
+		return cfg, err
+	}
+
+	return cfg, nil
+}
+
+func parseEnvConfig() (config, error) {
+	var cfg config
+
+	log.Println("File is not found, parse env")
+
+	appPort := os.Getenv("APPLICATION_PORT")
+	appName := os.Getenv("APPLICATION_NAME")
+
+	if len(appPort) == 0 || len(appName) == 0 {
+		return cfg, fmt.Errorf("env configuration doesn't exists")
+	}
+	cfg.Port = appPort
+	cfg.Name = appName
+
 	return cfg, nil
 }
 
@@ -107,15 +130,15 @@ func setupDefaultConfig(cfg *config) {
 }
 
 func main() {
-	cfg, err := parseFileEnvConfig()
+	var cfg config
+	var err error
+	cfg, err = parseFileEnvConfig()
+	cfg, err = parseEnvConfig()
 
 	if err != nil {
-		log.Printf("Config are not set up. The reason: %v. Using default instead.", err)
+		log.Println("No Env and File config found. Setup default.")
 		setupDefaultConfig(&cfg)
 	}
-
-	log.Printf("Application %s is starting\n", cfg.Name)
-
 	username := os.Getenv("DB_USERNAME")
 	password := os.Getenv("DB_PASSWORD")
 
@@ -124,7 +147,7 @@ func main() {
 	} else {
 		log.Printf("DB credentials: username: %s, password: %s", username, password)
 	}
-	router := gin.Default()
+	router := gin.New()
 
 	router.GET("/books", findAll)
 
@@ -132,9 +155,12 @@ func main() {
 
 	router.POST("/books", save)
 
+	router.DELETE("/books/:id", deleteById)
+
 	router.GET("/health", func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	})
+	log.Printf("Application %s is starting\n", cfg.Name)
 
 	log.Fatalln(router.Run(fmt.Sprintf(":%s", cfg.Port)))
 }
